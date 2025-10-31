@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="PVZ-Replanted-Helper.vcxproj" Id="48578cc4-ff10-488e-9c56-45ef7529a4dd" />
+</Solution>
