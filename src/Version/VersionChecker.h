@@ -10,7 +10,4 @@ namespace PVZ::Version
 	//! Checks the .exe Version number
 	//! @return True if the version is supported
 	std::expected<bool, PVZ::STATUS> IsSupportedVersionWin();
-
-
-
 }

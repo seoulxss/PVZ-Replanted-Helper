@@ -6,46 +6,71 @@
 
 #include "../Hooks/HookManager.h"
 #pragma comment(lib, "psapi.lib")
+#pragma comment(lib, "version.lib")
+
+inline std::wstring GetModulePath(HMODULE mod)
+{
+	std::wstring path(MAX_PATH, L'\0');
+	DWORD len = K32GetModuleFileNameExW(GetCurrentProcess(), mod, path.data(), MAX_PATH);
+	if (len == 0 || len >= MAX_PATH) return {};
+	path.resize(len);
+	return path;
+}
+
+inline std::expected<std::vector<std::uint8_t>, PVZ::STATUS> ReadFileBytes(const std::wstring& path)
+{
+	HANDLE hFile = CreateFileW(path.c_str(), GENERIC_READ, FILE_SHARE_READ, nullptr,
+		OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+	if (hFile == INVALID_HANDLE_VALUE)
+		return std::unexpected(PVZ::STATUS::FILE_NOT_FOUND);
+
+	LARGE_INTEGER size;
+	if (!GetFileSizeEx(hFile, &size) || size.QuadPart > 200'000'000) // >200 MB?
+	{
+		CloseHandle(hFile);
+		return std::unexpected(PVZ::STATUS::INVALID_VALUE);
+	}
+
+	std::vector<std::uint8_t> buffer(size.QuadPart);
+	DWORD read = 0;
+	if (!ReadFile(hFile, buffer.data(), size.QuadPart, &read, nullptr) || read != size.QuadPart)
+	{
+		CloseHandle(hFile);
+		return std::unexpected(PVZ::STATUS::FILE_READ_ERROR);
+	}
+
+	CloseHandle(hFile);
+	return buffer;
+}
 
 std::expected<bool, PVZ::STATUS> PVZ::Version::IsSupportedVersionEx()
 {
 	auto winVer = IsSupportedVersionWin();
-	if (winVer.has_value())
-	{
-		if (winVer.value() == true)
-		{
-			auto mod = GetModuleHandleW(L"GameAssembly.dll");
-			if (!mod)
-				return std::unexpected(PVZ::STATUS::NOT_FOUND);
+	if (!winVer.has_value() || !winVer.value())
+		return winVer;
 
-			MODULEINFO info;
-			if (K32GetModuleInformation(GetCurrentProcess(), mod, &info, sizeof(info)) == FALSE)
-				return std::unexpected(PVZ::STATUS::INVALID_VALUE);
+	HMODULE mod = GetModuleHandleW(L"GameAssembly.dll");
+	if (!mod)
+		return std::unexpected(PVZ::STATUS::NOT_FOUND);
 
-			//Check hash
-			PVZ::Hasher::Blake3Wrapper hasher;
-			std::vector<std::uint8_t> bytes(info.SizeOfImage, 0);
-			std::memcpy(bytes.data(), info.lpBaseOfDll, info.SizeOfImage);
+	std::wstring path = GetModulePath(mod);
+	if (path.empty())
+		return std::unexpected(PVZ::STATUS::INVALID_VALUE);
 
-			auto Hash = hasher.GetHashValueW(bytes);
-			if (!Hash.has_value())
-				return std::unexpected(Hash.error());
+	auto fileData = ReadFileBytes(path);
+	if (!fileData.has_value())
+		return std::unexpected(fileData.error());
 
-			for (const auto& hashes : PVZ::Global::g_SupportedGameVersionHash)
-			{
-				if (Hash == hashes)
-					return true;
-			}
+	PVZ::Hasher::Blake3Wrapper hasher;
+	auto hash = hasher.GetHashValueW(fileData.value());
+	if (!hash.has_value())
+		return std::unexpected(hash.error());
 
-			return false;
-		}
-	}
+	for (const auto& known : PVZ::Global::g_SupportedGameVersionHash)
+		if (hash.value() == known)
+			return true;
 
-	else if (!winVer.has_value())
-		return std::unexpected(winVer.error());
-
-	else
-		return false;
+	return false;
 }
 
 std::expected<bool, PVZ::STATUS> PVZ::Version::IsSupportedVersionWin()
