@@ -4,12 +4,13 @@
 #include <unordered_map>
 #include "HookDef.h"
 
+
 namespace PVZ::Hooks
 {
 	enum class HOOK_ID : std::uint8_t
 	{
 		DX_PRESENT,
-
+		DX_RESIZE_BUFFERS,
 
 
 	};
@@ -30,6 +31,8 @@ namespace PVZ::Hooks
 		std::expected<bool, PVZ::STATUS> AddHook(HOOK_ID id, std::uint64_t FuncAddr, std::uint64_t CallBack, std::uint64_t* Tramp);
 		std::expected<bool, PVZ::STATUS> RemoveHook(HOOK_ID id);
 
+		void HookAll();
+		void UnHookAll();
 	private:
 		std::unordered_map<HOOK_ID, PLH::NatDetour> m_Hooks;
 	};

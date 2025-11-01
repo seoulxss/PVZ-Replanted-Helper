@@ -5,6 +5,15 @@
 PVZ::Hooks::HookManager::HookManager()
 {
 	m_Hooks.reserve(100);
+
+	std::uint64_t* Vtable = static_cast<std::uint64_t*>(DX::Present::GetSwapChainVTable());
+	std::uint64_t PresentAddr = Vtable[8];
+	std::uint64_t ResizeBuffersAddr = Vtable[13];
+
+	m_Hooks.try_emplace(HOOK_ID::DX_PRESENT, PresentAddr, reinterpret_cast<std::uint64_t>(DX::Present::hkPresent), &DX::Present::g_oPresent);
+	m_Hooks.try_emplace(HOOK_ID::DX_RESIZE_BUFFERS, ResizeBuffersAddr, reinterpret_cast<std::uint64_t>(DX::ResizeBuffers::hkResizeBuffers), &DX::ResizeBuffers::g_oResizeBuffers);
+
+
 }
 
 PVZ::Hooks::HookManager::~HookManager()
@@ -99,3 +108,22 @@ std::expected<bool, PVZ::STATUS> PVZ::Hooks::HookManager::RemoveHook(HOOK_ID id)
 	m_Hooks.erase(it);
 	return true;
 }
+
+void PVZ::Hooks::HookManager::HookAll()
+{
+	for (auto& val : m_Hooks | std::views::values)
+	{
+		if (!val.isHooked())
+			val.hook();
+	}
+}
+
+void PVZ::Hooks::HookManager::UnHookAll()
+{
+	for (auto& val : m_Hooks | std::views::values)
+	{
+		if (val.isHooked())
+			val.unHook();
+	}
+}
+
