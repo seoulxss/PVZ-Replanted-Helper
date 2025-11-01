@@ -11,6 +11,7 @@ namespace PVZ
 #else
 	inline void LogDebug(const wchar_t* Msg)
 	{
+		//We leave this empty
 	}
 #endif
 
