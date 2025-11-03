@@ -187,6 +187,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ext\ImGui\imgui.cpp" />
+    <ClCompile Include="ext\ImGui\imgui_demo.cpp" />
+    <ClCompile Include="ext\ImGui\imgui_draw.cpp" />
+    <ClCompile Include="ext\ImGui\imgui_impl_dx11.cpp" />
+    <ClCompile Include="ext\ImGui\imgui_impl_win32.cpp" />
+    <ClCompile Include="ext\ImGui\imgui_tables.cpp" />
+    <ClCompile Include="ext\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="src\Menu\Menu.cpp" />
     <ClCompile Include="src\Logger\Logging.cpp" />
     <ClCompile Include="src\Blake3\Blake3Wrapper.cpp" />
     <ClCompile Include="src\Renderer\Renderer.cpp" />
@@ -202,6 +210,16 @@
     <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ext\ImGui\imconfig.h" />
+    <ClInclude Include="ext\ImGui\imgui.h" />
+    <ClInclude Include="ext\ImGui\imgui_impl_dx11.h" />
+    <ClInclude Include="ext\ImGui\imgui_impl_win32.h" />
+    <ClInclude Include="ext\ImGui\imgui_internal.h" />
+    <ClInclude Include="ext\ImGui\imstb_rectpack.h" />
+    <ClInclude Include="ext\ImGui\imstb_textedit.h" />
+    <ClInclude Include="ext\ImGui\imstb_truetype.h" />
+    <ClInclude Include="src\Menu\Menu.h" />
+    <ClInclude Include="src\IL2CPP\Definitions.h" />
     <ClInclude Include="src\Logger\Logging.h" />
     <ClInclude Include="src\Blake3\Blake3Wrapper.h" />
     <ClInclude Include="ext\PatternScanner\PatternScanner.h" />
