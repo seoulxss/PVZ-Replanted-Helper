@@ -1,6 +1,7 @@
 #include "HookManager.h"
-
 #include <ranges>
+#include "../../ext/PatternScanner/PatternScanner.h"
+#include "../Pattern/Patterns.h"
 
 PVZ::Hooks::HookManager::HookManager()
 {
@@ -14,6 +15,16 @@ PVZ::Hooks::HookManager::HookManager()
 	m_Hooks.try_emplace(HOOK_ID::DX_RESIZE_BUFFERS, ResizeBuffersAddr, reinterpret_cast<std::uint64_t>(DX::ResizeBuffers::hkResizeBuffers), &DX::ResizeBuffers::g_oResizeBuffers);
 
 
+	//Get Module Info
+	HMODULE AssemblyModule = GetModuleHandleW(L"GameAssembly.dll");
+	MODULEINFO info;
+	K32GetModuleInformation(GetCurrentProcess(), AssemblyModule, &info, sizeof(info));
+
+	Global::g_ModInfo = info;
+	Global::g_hAssembly = AssemblyModule;
+
+	std::uint64_t CoinInit = reinterpret_cast<std::uint64_t>(Sig::find(AssemblyModule, info.SizeOfImage, Pattern::g_pReloadedGameplayCoinCoinInitialize));
+	m_Hooks.try_emplace(HOOK_ID::RELOADED_GAMEPLAY_COIN_COININITIALIZE, CoinInit, reinterpret_cast<std::uint64_t>(Coin::hkReloadedGameplayCoinCoinInitialize), &Coin::g_oCoinInitialize);
 }
 
 PVZ::Hooks::HookManager::~HookManager()

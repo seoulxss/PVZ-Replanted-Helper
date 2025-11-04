@@ -12,7 +12,7 @@ namespace PVZ::Hooks
 		DX_PRESENT,
 		DX_RESIZE_BUFFERS,
 
-
+		RELOADED_GAMEPLAY_COIN_COININITIALIZE
 	};
 
 	class HookManager final
