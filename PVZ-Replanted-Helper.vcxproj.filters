@@ -66,6 +66,7 @@
     <None Include=".gitignore" />
     <None Include="README.md" />
     <None Include=".gitattributes" />
+    <None Include="src\IL2CPP\README.md" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Hooks\HookManager.h">
@@ -95,7 +96,7 @@
     <ClInclude Include="src\Logger\Logging.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\IL2CPP\Definitions.h">
+    <ClInclude Include="src\IL2CPP\il2cpp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="src\Menu\Menu.h">

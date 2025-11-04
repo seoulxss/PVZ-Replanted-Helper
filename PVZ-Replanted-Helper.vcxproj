@@ -208,6 +208,7 @@
     <None Include=".gitignore" />
     <None Include="PVZ-Replanted-Helper.slnx" />
     <None Include="README.md" />
+    <None Include="src\IL2CPP\README.md" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ext\ImGui\imconfig.h" />
@@ -219,7 +220,7 @@
     <ClInclude Include="ext\ImGui\imstb_textedit.h" />
     <ClInclude Include="ext\ImGui\imstb_truetype.h" />
     <ClInclude Include="src\Menu\Menu.h" />
-    <ClInclude Include="src\IL2CPP\Definitions.h" />
+    <ClInclude Include="src\IL2CPP\il2cpp.h" />
     <ClInclude Include="src\Logger\Logging.h" />
     <ClInclude Include="src\Blake3\Blake3Wrapper.h" />
     <ClInclude Include="ext\PatternScanner\PatternScanner.h" />
