@@ -55,6 +55,8 @@ namespace PVZ::Render
 
 		std::list<Menu>& GetMenus();
 	private:
+
+		//Support multiple windows?
 		std::list<Menu> m_Menus;
 		bool m_IsInit = false;
 		std::uint8_t m_Counter = 0;

@@ -11,17 +11,18 @@ namespace PVZ
 	class Menu
 	{
 	public:
-		Menu(std::shared_ptr<Render::Renderer> pRenderer);
+		Menu(Render::Renderer* pRenderer);
+		~Menu();
 
 		void Show();
 
 		bool GetShowMenu();
-		void SetHowMenu(bool val);
+		void SetShowMenu(bool val);
 
 		void SetOverlayClickable(bool val);
 
 	private:
 		bool m_ShowMenu = true;
-		std::shared_ptr<Render::Renderer> m_pRenderer = nullptr;
+		Render::Renderer* m_pRenderer = nullptr;
 	};
 }

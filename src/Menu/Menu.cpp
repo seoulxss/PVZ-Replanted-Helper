@@ -4,8 +4,14 @@
 #include "../Hooks/HookManager.h"
 #include "../Renderer/Renderer.h"
 
-PVZ::Menu::Menu(std::shared_ptr<Render::Renderer> pRenderer) : m_pRenderer(pRenderer)
+PVZ::Menu::Menu(Render::Renderer* pRenderer) : m_pRenderer(pRenderer)
 {
+}
+
+PVZ::Menu::~Menu()
+{
+	SetShowMenu(false);
+	SetOverlayClickable(false);
 }
 
 void PVZ::Menu::Show()
@@ -25,7 +31,7 @@ bool PVZ::Menu::GetShowMenu()
 	return m_ShowMenu;
 }
 
-void PVZ::Menu::SetHowMenu(bool val)
+void PVZ::Menu::SetShowMenu(bool val)
 {
 	m_ShowMenu = val;
 }

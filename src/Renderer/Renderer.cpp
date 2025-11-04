@@ -29,7 +29,6 @@ PVZ::Render::Renderer::Renderer(const DXData& Data) : m_DxData(Data)
 	{
 		m_IsInit = false;
 	}
-
 }
 
 PVZ::Render::Renderer::~Renderer()
