@@ -130,10 +130,49 @@ LRESULT PVZ::Hooks::Windows::WndProc::hkWndProc(HWND hWnd, UINT msg, WPARAM wPar
 void __fastcall PVZ::Hooks::Coin::hkReloadedGameplayCoinCoinInitialize(Reloaded_Gameplay_Coin_o* pThis, float theX, float theY,
 	int32_t theCoinType, int32_t theCoinMotion, const MethodInfo* method)
 {
-	reinterpret_cast<tReloaded_Gameplay_Coin__CoinInitialize*>(g_oCoinInitialize)(pThis, theX, theY, theCoinType, theCoinMotion, method);
+	//Call the orig function
+	reinterpret_cast<Defs::tReloaded_Gameplay_Coin__CoinInitialize*>(g_oCoinInitialize)(pThis, theX, theY, theCoinType, theCoinMotion, method);
 
-	//Collect it instantly
-	static std::uintptr_t* collect = (std::uintptr_t*)Sig::find(Global::g_hAssembly, Global::g_ModInfo.SizeOfImage, Pattern::g_pReloadedGameplayCoinCollect);
-	reinterpret_cast<Defs::tReloaded_Gameplay_Coin__Collect*>(collect)(pThis, 0, true, nullptr);
+	auto type = static_cast<Defs::COIN_TYPE>(theCoinType);
+	switch (type)
+	{
+	case Defs::Sun:
+		if (Settings::g_CollectSun)
+			reinterpret_cast<Defs::tReloaded_Gameplay_Coin__Collect*>(PVZ::Global::Funcs::g_pCollect)(pThis, 0, true,0, nullptr);
+		break;
+
+	case Defs::SmallSun:
+		if (Settings::g_CollectSun)
+			reinterpret_cast<Defs::tReloaded_Gameplay_Coin__Collect*>(PVZ::Global::Funcs::g_pCollect)(pThis, 0, true,0, nullptr);
+		break;
+
+	case Defs::LargeSun:
+		if (Settings::g_CollectSun)
+			reinterpret_cast<Defs::tReloaded_Gameplay_Coin__Collect*>(PVZ::Global::Funcs::g_pCollect)(pThis, 0, true, 0, nullptr);
+		break;
+
+	case Defs::DoubleSun:
+		if (Settings::g_CollectSun)
+			reinterpret_cast<Defs::tReloaded_Gameplay_Coin__Collect*>(PVZ::Global::Funcs::g_pCollect)(pThis, 0, true, 0, nullptr);
+		break;
+
+	case Defs::Silver:
+		if (Settings::g_CollectMoney)
+			reinterpret_cast<Defs::tReloaded_Gameplay_Coin__Collect*>(PVZ::Global::Funcs::g_pCollect)(pThis, 0, true, 0, nullptr);
+		break;
+
+	case Defs::Gold:
+		if (Settings::g_CollectMoney)
+			reinterpret_cast<Defs::tReloaded_Gameplay_Coin__Collect*>(PVZ::Global::Funcs::g_pCollect)(pThis, 0, true, 0, nullptr);
+		break;
+
+	case Defs::Diamond:
+		if (Settings::g_CollectMoney)
+			reinterpret_cast<Defs::tReloaded_Gameplay_Coin__Collect*>(PVZ::Global::Funcs::g_pCollect)(pThis, 0, true, 0, nullptr);
+		break;
+	}
+
+
+	
 
 }

@@ -1,7 +1,8 @@
 #include <Windows.h>
-
+#include "../ext/PatternScanner/PatternScanner.h"
 #include "Hooks/HookManager.h"
 #include "Logger/Logging.h"
+#include "Pattern/Patterns.h"
 #include "Version/VersionChecker.h"
 //#pragma comment (linker, "/export:GetAdaptersAddresses=Proxy.GetAdaptersAddresses,@46")
 //#pragma comment (linker, "/export:GetIfEntry=Proxy.GetIfEntry,@49")
@@ -16,32 +17,41 @@ void main(HMODULE hMod)
     freopen_s(&f, "CONOUT$", "w", stdout);
     spdlog::set_default_logger(spdlog::default_logger());
     spdlog::set_level(spdlog::level::debug);
-    PVZ::LogDebug(L"Initialised Logger!");
+    PVZ::LogDebug(L"Initialized Logger!");
 #endif
 
-    auto ver = PVZ::Version::IsSupportedVersionEx();
-	if (ver.has_value())
-	{
-        if (ver.value() == false)
-        {
-            MessageBeep(MB_ICONERROR);
-            MessageBoxW(nullptr, L"Looks like this version is not supported (yet)", L"Error!", MB_OK);
-            Sleep(1000);
-#ifdef _DEBUG
-            spdlog::default_logger().reset();
-            FreeConsole();
-            fclose(f);
-#endif
-            FreeLibraryAndExitThread(hMod, 0);
-        }
-        
-        PVZ::Global::g_pHookManager = std::make_shared<PVZ::Hooks::HookManager>();
-        PVZ::Global::g_pHookManager->HookAll();
+    //Init!
+	//Get Module Info
+    HMODULE AssemblyModule = GetModuleHandleW(L"GameAssembly.dll");
+    MODULEINFO info;
+    K32GetModuleInformation(GetCurrentProcess(), AssemblyModule, &info, sizeof(info));
 
-        while (!GetAsyncKeyState(VK_F1))
-            Sleep(20);
+    PVZ::Global::g_ModInfo = info;
+    PVZ::Global::g_hAssembly = AssemblyModule;
+    PVZ::Global::Funcs::g_pCoinInitialized = const_cast<void*>(Sig::find(AssemblyModule, info.SizeOfImage, PVZ::Pattern::g_pReloadedGameplayCoinCoinInitialize));
+    PVZ::Global::Funcs::g_pIsMoney = const_cast<void*>(Sig::find(AssemblyModule, info.SizeOfImage, PVZ::Pattern::g_pReloadedGameplayCoinIsMoney));
+    PVZ::Global::Funcs::g_pIsSun = const_cast<void*>(Sig::find(AssemblyModule, info.SizeOfImage, PVZ::Pattern::g_pReloadedGameplayCoinIsSun));
+    PVZ::Global::Funcs::g_pCollect = const_cast<void*>(Sig::find(AssemblyModule, info.SizeOfImage, PVZ::Pattern::g_pReloadedGameplayCoinCollect));
 
-	}
+    PVZ::Global::g_pHookManager = std::make_shared<PVZ::Hooks::HookManager>();
+    if (!PVZ::Global::g_pHookManager)
+        return;
+
+    auto val = PVZ::Global::g_pHookManager->Hook(PVZ::Hooks::HOOK_ID::DX_PRESENT);
+    if (!val.has_value())
+        return;
+
+    val = PVZ::Global::g_pHookManager->Hook(PVZ::Hooks::HOOK_ID::DX_RESIZE_BUFFERS);
+    if (!val.has_value())
+        return;
+
+    val = PVZ::Global::g_pHookManager->Hook(PVZ::Hooks::HOOK_ID::RELOADED_GAMEPLAY_COIN_COININITIALIZE);
+    if (!val.has_value())
+        return;
+
+
+    while (!GetAsyncKeyState(VK_F1))
+        Sleep(20);
 
     PVZ::Global::g_pHookManager->UnHookAll();
 

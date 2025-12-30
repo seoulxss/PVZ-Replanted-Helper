@@ -24,19 +24,27 @@ namespace PVZ
 	};
 }
 
+namespace Settings
+{
+	inline bool g_CollectSun = false;
+	inline bool g_CollectMoney = false;
+
+
+}
+
 namespace PVZ::Global
 {
 
 	inline MODULEINFO g_ModInfo = {};
 	inline HMODULE g_hAssembly = nullptr;
 
-	inline std::array<const wchar_t*, 1> g_SupportedGameVersion
-	{
-		L"1.3.1217.0"
-	};
 
-	inline std::array<const wchar_t*, 1> g_SupportedGameVersionHash
+	namespace Funcs
 	{
-		L"4707F22E7C7C49B2E1E8F5AF530CF1E5BF4DCC1838324D89588DEA483D010188"
-	};
+		inline void* g_pCoinInitialized = nullptr;
+		inline void* g_pCollect = nullptr;
+		inline void* g_pIsMoney = nullptr;
+		inline void* g_pIsSun = nullptr;
+
+	}
 }

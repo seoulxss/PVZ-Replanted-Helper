@@ -1,4 +1,6 @@
-﻿#pragma once
+﻿// ReSharper disable CppClangTidyClangDiagnosticReservedIdentifier
+
+#pragma once
 #include <cstdint>
 #include <dxgi.h>
 #include <memory>
@@ -8,7 +10,47 @@
 
 namespace PVZ::Defs
 {
-	using tReloaded_Gameplay_Coin__Collect = void(Reloaded_Gameplay_Coin_o* pThis, int32_t playerIndex, bool spawnCoins, const MethodInfo* method);
+	using tReloaded_Gameplay_Coin__CoinInitialize = void(Reloaded_Gameplay_Coin_o* pThis, float theX, float theY, int32_t theCoinType, int32_t theCoinMotion, const MethodInfo* method);
+	using tReloaded_Gameplay_Coin__Collect = void(Reloaded_Gameplay_Coin_o* pthis, int32_t playerIndex,bool spawnCoins,int32_t vacuumStyle,const MethodInfo* method);
+	using tReloaded_Gameplay_Coin__IsSun = bool(Reloaded_Gameplay_Coin_o* pThis);
+	using tReloaded_Gameplay_Coin__IsMoney = bool(Reloaded_Gameplay_Coin_o* pThis);
+
+	enum  COIN_TYPE : int32_t
+	{
+		None = 0x00000000,
+		Silver,
+		Gold,
+		Diamond,
+		Sun,
+		SmallSun,
+		LargeSun,
+		FinalSeedPacket,
+		Trophy,
+		Shovel,
+		Almanac,
+		CarKeys,
+		Vase,
+		WateringCan,
+		Taco,
+		Note,
+		UsableSeedPacket,
+		PresentPlant,
+		AwardMoneyBag,
+		AwardPresent,
+		AwardBagDiamond,
+		AwardSilverSunflower,
+		AwardGoldSunflower,
+		Chocolate,
+		AwardChocolate,
+		PresentMinigames,
+		PresentPuzzleMode,
+		PresentSurvivalMode,
+		DoubleSun,
+		Brain,
+		VersusTrophyPlant,
+		VersusTrophyZombie,
+		RIPTrophy,
+	};
 }
 
 namespace PVZ::Hooks
@@ -47,7 +89,6 @@ namespace PVZ::Hooks
 
 	namespace Coin
 	{
-		using tReloaded_Gameplay_Coin__CoinInitialize = void(Reloaded_Gameplay_Coin_o* pThis, float theX, float theY, int32_t theCoinType, int32_t theCoinMotion, const MethodInfo* method);
 		void __fastcall hkReloadedGameplayCoinCoinInitialize(Reloaded_Gameplay_Coin_o* pThis, float theX, float theY, int32_t theCoinType, int32_t theCoinMotion, const MethodInfo* method);
 		inline std::uint64_t g_oCoinInitialize = 0;
 	}

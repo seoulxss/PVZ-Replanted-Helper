@@ -1,10 +1,10 @@
 #pragma once
 namespace PVZ::Pattern
 {
-	constexpr const char* g_pReloadedGameplayCoinCoinInitialize = "48 89 5C 24 ? 48 89 74 24 ? 57 48 83 EC ? 80 3D ? ? ? ? ? 41 8B F9 0F 29 74 24 ? 48 8B D9";
-	constexpr const char* g_pReloadedGameplayCoinCollect = "40 53 57 41 57 48 83 EC ? 80 3D ? ? ? ? ? 41 0F B6 D8";
-
-
+	constexpr const char* g_pReloadedGameplayCoinCoinInitialize = "48 89 5C 24 ? 48 89 74 24 ? 57 48 81 EC ? ? ? ? 80 3D ? ? ? ? ? 41 8B F9 0F 29 74 24 ? 48 8B D9";
+	constexpr const char* g_pReloadedGameplayCoinCollect = "40 53 55 57 41 56 48 83 EC ? 80 3D ? ? ? ? ? 41 8B E9";
+	constexpr const char* g_pReloadedGameplayCoinIsMoney = "83 B9 ? ? ? ? ? 74 ? 83 B9 ? ? ? ? ? 74 ? 83 B9 ? ? ? ? ? 0F 94 C0 C3 B0 ? C3 83 B9 ? ? ? ? ? B9";
+	constexpr const char* g_pReloadedGameplayCoinIsSun = "83 B9 ? ? ? ? ? 74 ? 83 B9 ? ? ? ? ? 74 ? 83 B9 ? ? ? ? ? 74 ? 83 B9 ? ? ? ? ? 74 ? 83 B9 ? ? ? ? ? 0F 94 C0 C3 B0 ? C3 CC CC CC CC CC CC CC CC CC CC CC CC CC CC 48 89 5C 24 ? 57 48 83 EC ? 80 3D ? ? ? ? ? 41 8B F9";
 
 
 

@@ -20,7 +20,8 @@ void PVZ::Menu::Show()
 	{
 		ImGui::Begin("main");
 
-		ImGui::Text("Test");
+		ImGui::Checkbox("Collect Suns", &Settings::g_CollectSun);
+		ImGui::Checkbox("Collect Money", &Settings::g_CollectMoney);
 
 		ImGui::End();
 	}
